@@ -1,6 +1,6 @@
 # luggagefollower
 
-A new Flutter application.
+JoulieBean.
 
 ## Getting Started
 
