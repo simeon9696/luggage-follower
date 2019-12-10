@@ -1,6 +1,5 @@
 # luggagefollower
 
-JoulieBean.
 
 ## Getting Started
 
