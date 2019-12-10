@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # luggagefollower
 
 A new Flutter application.
@@ -14,3 +15,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# luggage-follower
+>>>>>>> 20bc952725ba0d451838d21512bb46f84a37c1be
