@@ -9,8 +9,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="luggagefollower"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Luggage Follower"
+        android:icon="@mipmap/icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -27,8 +27,7 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
-            android:value="2" />
-
+            android:value="2"/>
     </application>
     <uses-sdk tools:overrideLibrary="io.github.edufolly.flutterbluetoothserial"/>
 </manifest>

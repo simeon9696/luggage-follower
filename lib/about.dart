@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'navigationdrawer.dart';
 import 'applicationbar.dart';
 
 class About extends StatelessWidget {
@@ -9,7 +8,6 @@ class About extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      backgroundColor: Colors.grey[900],
       appBar: ApplicationBar(title: 'About'),
       body:Center(
         child:Column(

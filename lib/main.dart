@@ -1,18 +1,33 @@
 import 'package:flutter/cupertino.dart';
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:splashscreen/splashscreen.dart';
+
 import 'home.dart';
 import 'about.dart';
 import 'settings.dart';
+import 'adddevice.dart';
 
 
+void main(){runApp(LuggageFollower());}
 
+class LuggageSplashScreen extends StatefulWidget {
+  @override
+  _LuggageSplashScreenState createState() => _LuggageSplashScreenState();
+}
 
-void main(){
+class _LuggageSplashScreenState extends State<LuggageSplashScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return new SplashScreen(
+      seconds: 3,
+      navigateAfterSeconds: LuggageFollower(),
+      title: Text("Luggage Follower", style: Theme.of(context).textTheme.title),
+      backgroundColor: Colors.pink,
+      image: Image.asset('icons/icon.png'),
+      gradientBackground: new LinearGradient(colors: [Colors.cyan, Colors.blue], begin: Alignment.topLeft, end: Alignment.bottomRight),
 
-  runApp(
-      LuggageFollower()
-  );
+    );
+  }
 }
 
 class LuggageFollower extends StatefulWidget {
@@ -31,8 +46,8 @@ class _LuggageFollowerState extends State<LuggageFollower> {
       theme: ThemeData(
         // Define the default brightness and colors.
         brightness: Brightness.dark,
-        primaryColor: Colors.lightBlue[800],
-        accentColor: Colors.cyan[600],
+        primaryColor: Colors.pink,
+        accentColor: Colors.pinkAccent,
         // Define the default font family.
         fontFamily: 'Montserrat',
         // Define the default TextTheme. Use this to specify the default
@@ -48,6 +63,7 @@ class _LuggageFollowerState extends State<LuggageFollower> {
       routes:{
         '/': (context) => LuggageFollowerMain(),
         '/home': (context) => LuggageFollowerMain(),
+        '/adddevice': (context) => AddDevice(),
         '/about': (context) => About(),
         '/settings': (context) => Settings(),
       },

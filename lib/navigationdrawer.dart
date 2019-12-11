@@ -34,12 +34,16 @@ class NavigationDrawer extends StatelessWidget {
               trailing: Icon(Icons.home),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/home');
+                //Navigator.pushNamed(context, '/home');
               }
           ),
           ListTile(
             title: Text("Add Device"),
             trailing: Icon(Icons.add),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/adddevice');
+            }
           ),
           ListTile(
             title: Text("Settings"),
