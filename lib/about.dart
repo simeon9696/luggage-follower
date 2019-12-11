@@ -11,7 +11,6 @@ class About extends StatelessWidget {
 
       backgroundColor: Colors.grey[900],
       appBar: ApplicationBar(title: 'About'),
-      drawer: NavigationDrawer(),
       body:Center(
         child:Column(
             mainAxisAlignment: MainAxisAlignment.center,

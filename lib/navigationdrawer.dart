@@ -1,11 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:luggagefollower/settings.dart';
-
-
-import 'home.dart';
-import 'about.dart';
-import 'settings.dart';
 
 
 class NavigationDrawer extends StatelessWidget {
@@ -39,7 +33,7 @@ class NavigationDrawer extends StatelessWidget {
               title: Text("Home"),
               trailing: Icon(Icons.home),
               onTap: () {
-               /// Navigator.pushReplacementNamed(context, '/home');
+                Navigator.pop(context);
                 Navigator.pushReplacementNamed(context, '/home');
               }
           ),
@@ -51,6 +45,7 @@ class NavigationDrawer extends StatelessWidget {
             title: Text("Settings"),
             trailing: Icon(Icons.settings),
             onTap: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/settings');
             }
           ),
@@ -58,6 +53,7 @@ class NavigationDrawer extends StatelessWidget {
               title: Text("About"),
               trailing: Icon(Icons.person),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/about');
               }
           ),

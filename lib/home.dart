@@ -12,11 +12,20 @@ class LuggageFollowerMain extends StatefulWidget {
 }
 
 class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
-  String _string = 'lll';
+  var dataFromScreen ={
+    'feet': true,
+    'metres': false,
+    'goingOutOfRangeAlert': false,
+    'outOfRangeAlert': false,
+  };
+
 
 
   @override
   Widget build(BuildContext context) {
+
+    dataFromScreen = ModalRoute.of(context).settings.arguments;
+    print(dataFromScreen['feet'] );
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
@@ -43,12 +52,13 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
-            child: Text(_string, style: Theme.of(context).textTheme.body1),
+            child: Text('0 ' + (dataFromScreen['feet'] ? "ft" : "m"), style: Theme.of(context).textTheme.body1),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
             child: LuggageFollow(),
           ),
+
         ],
       ),
     );
