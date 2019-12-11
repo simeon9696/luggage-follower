@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'about.dart';
@@ -6,7 +7,13 @@ import 'settings.dart';
 
 
 
-void main() => runApp(LuggageFollower());
+
+void main(){
+
+  runApp(
+      LuggageFollower()
+  );
+}
 
 class LuggageFollower extends StatefulWidget {
   @override
@@ -48,6 +55,7 @@ class _LuggageFollowerState extends State<LuggageFollower> {
     );
   }
 }
+
 
 
 
