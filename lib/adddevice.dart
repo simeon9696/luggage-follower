@@ -143,82 +143,88 @@ class _AddDeviceState extends State<AddDevice> {
   }
   @override
   Widget build(BuildContext context) {
-    if(_noDevicesFound == true){
-      return Scaffold(
-        appBar: ApplicationBar(title:'Devices'),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(_noDevicesFound && _discoveryDone? _noDevices: _scanningStatus),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            startDeviceDiscovery();
-
-          },
-          child: Icon(Icons.add),
-
-        ),
-      );
-    }else if(_discoveringDevices ==true || _discoveryDone ==true){
-      return Scaffold(
-        appBar: ApplicationBar(title: 'Devices'),
-        body:Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    var jjjj = Scaffold(
+      appBar: ApplicationBar(title:'Devices'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 15),
-              child:Text('Discovered Devices'),
-            ),
-
-            Flexible(
-              child: ListView.builder(
-                  itemCount: _devices.length,
-                  itemBuilder: (context,index) {
-                    return Container(
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 0),
-                            child: ListTile(
-                              title: Text(_devices[index].device.name),
-                              trailing: Icon(Icons.add),
-                              onTap: () {
-                                print('Tapping ${_devices[index].device.name}');
-                                connectToDevice(_devices[index]);
-                              }, //devices[index].device.toString()
-                            ),
-                          ),
-                          Divider(height: 3.0, color: Colors.grey),
-                        ],
-                      ),
-                    );
-                  }
-              ),
-            ),
+            Text(_noDevicesFound && _discoveryDone? _noDevices: _scanningStatus),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (!_discoveringDevices) {
-              startDeviceDiscovery();
-            } else {
-              showFlutterToastMessage("Scanning in progress. Wait till completion to re-scan");
-            }
-          },
-          child: (_discoveringDevices? CircularProgressIndicator(
-              backgroundColor: Colors.pink,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              value:null,
-              strokeWidth: 1.0)
-              : Icon(Icons.add)
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          startDeviceDiscovery();
+
+        },
+        child: Icon(Icons.add),
+
+      ),
+    );
+    var finalWidget;
+
+    var xxxx = Scaffold(
+      appBar: ApplicationBar(title: 'Devices'),
+      body:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 15),
+            child:Text('Discovered Devices'),
           ),
-         ),
-      );
+
+          Flexible(
+            child: ListView.builder(
+                itemCount: _devices.length,
+                itemBuilder: (context,index) {
+                  return Container(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 0),
+                          child: ListTile(
+                            title: Text(_devices[index].device.name),
+                            trailing: Icon(Icons.add),
+                            onTap: () {
+                              print('Tapping ${_devices[index].device.name}');
+                              connectToDevice(_devices[index]);
+                            }, //devices[index].device.toString()
+                          ),
+                        ),
+                        Divider(height: 3.0, color: Colors.grey),
+                      ],
+                    ),
+                  );
+                }
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (!_discoveringDevices) {
+            startDeviceDiscovery();
+          } else {
+            showFlutterToastMessage("Scanning in progress. Wait till completion to re-scan");
+          }
+        },
+        child: (_discoveringDevices? CircularProgressIndicator(
+            backgroundColor: Colors.pink,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            value:null,
+            strokeWidth: 1.0)
+            : Icon(Icons.add)
+        ),
+      ),
+    );
+
+    if(_noDevicesFound == true){
+      finalWidget = jjjj;
+    }else if(_discoveringDevices ==true || _discoveryDone ==true){
+      finalWidget = xxxx;
+    }
+    return finalWidget;
   }
 
-  }
 }
