@@ -42,7 +42,7 @@ class _LuggageFollowerState extends State<LuggageFollower> {
 
     return MaterialApp(
       title: appName,
-      debugShowCheckedModeBanner: false,
+      //debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Define the default brightness and colors.
         brightness: Brightness.dark,
