@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:syncfusion_flutter_core/core.dart';
 
 import 'home.dart';
 import 'about.dart';
@@ -8,7 +9,10 @@ import 'settings.dart';
 import 'adddevice.dart';
 
 
-void main(){runApp(LuggageFollower());}
+void main(){
+  SyncfusionLicense.registerLicense('NT8mJyc2IWhiZH1gfWN9YWVoYmF8YGJ8ampqanNiYmlmamlmanMDHmggOj42PD0hMj45OicTND4yOj99MDw+');
+  runApp(LuggageFollower());
+}
 
 class LuggageSplashScreen extends StatefulWidget {
   @override

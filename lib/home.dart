@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+
 
 import 'applicationbar.dart';
 import 'navigationdrawer.dart';
-import 'bluetooth.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
@@ -21,13 +23,69 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
     'goingOutOfRangeAlert': false,
     'outOfRangeAlert': false,
   };
+
+  String _luggageStatus = 'Not connected';
+  String _luggageDistance = 'N/A';
+  String _distanceUnits = '';
+
+
+  //Bluetooth setup
+  FlutterBluetoothSerial bluetooth = FlutterBluetoothSerial.instance;
+  void getDeviceInformation() async{
+    bool deviceBluetoothAvail = await bluetooth.isEnabled;
+    bool deviceBluetoothEn = await bluetooth.isAvailable;
+
+    int rssiValue =0;
+    if(deviceBluetoothEn && deviceBluetoothAvail){
+      String distance = 'N/A';
+      changeLuggageStatus('Device not in range');
+      changeLuggageDistance(distance);
+      changeDistanceUnits(distance);
+      rssiValue = getRssi();
+
+    }
+    else{
+      //_neverSatisfied();
+      changeLuggageStatus(_luggageStatus = 'Bluetooth disabled');
+      changeLuggageDistance('N/A');
+      changeDistanceUnits('N/A');
+    }
+  }
+  void changeLuggageStatus(String status){
+    setState(() {
+      _luggageStatus = status;
+    });
+    return;
+  }
+
+  void changeLuggageDistance(String distance){
+    setState(() {
+      _luggageDistance = distance;
+    });
+    return;
+  }
+
+  void changeDistanceUnits(String distance){
+    if (distance =='N/A'){
+      _distanceUnits = '';
+    }else{
+      _distanceUnits =(dataFromScreen['feet'] ? "ft" : "m");
+    }
+    return;
+  }
+
+
+
+  int getRssi(){
+    int rssi = 0;
+    //bluetooth.getBondStateForAddress()
+    return rssi;
+  }
+
   initState() {
     super.initState();
     //FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
-
     Future onSelectNotification(String payload) async {
       showDialog(
         context: context,
@@ -50,8 +108,11 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
+    getDeviceInformation();
 
     dataFromScreen = ModalRoute.of(context).settings.arguments;
     if(dataFromScreen == null){
@@ -62,7 +123,6 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
         'outOfRangeAlert': false,
       };
     }
-    print(dataFromScreen['feet'] );
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
@@ -77,23 +137,39 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
-            child: Text('Paired', style: Theme.of(context).textTheme.body1),
+            child: Text(_luggageStatus, style: Theme.of(context).textTheme.body1),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 0),
             child: Divider(height: 3.0, color: Colors.pinkAccent, indent: 150, endIndent: 150),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
-            child: Text('Distance to Luggage', style: Theme.of(context).textTheme.body2),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
-            child: Text('0 ' + (dataFromScreen['feet'] ? "ft" : "m"), style: Theme.of(context).textTheme.body1),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
-            child: LuggageFollow(),
+          Container(
+            child: SfRadialGauge(
+              axes: <RadialAxis>[
+                RadialAxis(minimum: 0, maximum: 150,
+                  pointers: <GaugePointer>[MarkerPointer(
+                    markerType: MarkerType.invertedTriangle,
+                    markerOffset: -5,
+                    enableAnimation: true,
+                    animationDuration: 0.5,
+                    value: 90,
+                    color: Colors.pink,
+                    )
+                  ],
+                  annotations: <GaugeAnnotation>[
+                    GaugeAnnotation(
+                      widget: Container(
+                        child:Text('90', style: Theme.of(context).textTheme.body1),
+                      ),
+                      angle: 90,
+                      positionFactor: 0.5,
+                      horizontalAlignment: GaugeAlignment.center,
+                      verticalAlignment: GaugeAlignment.center,
+                    )
+                  ]
+                )
+              ]
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
@@ -101,6 +177,7 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
                 onPressed:_showNotification,
                 child: Text('Launch notif')),
           ),
+
         ],
       ),
     );

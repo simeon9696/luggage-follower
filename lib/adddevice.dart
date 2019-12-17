@@ -89,16 +89,23 @@ class _AddDeviceState extends State<AddDevice> {
         _discoveringDevices=true;
       });
 
+
       _streamSubscription = FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
          setState(() { _devices.add(r); });
 
       });
 
+      showFlutterToastMessage('Beginning scan...');
       _streamSubscription.onDone(() {
+        showFlutterToastMessage('Scan complete! Press plus button to rescan if needed');
 
+        setState(() {
+
+        });
         setState(() {
           _discoveryDone = true;
           _discoveringDevices=false;
+
           if(_devices.length > 0){
             _noDevicesFound =false;
           }else{
@@ -106,6 +113,7 @@ class _AddDeviceState extends State<AddDevice> {
           }
           for(var device in _devices){
             print(device.device.name);
+
           }
         });
       });
@@ -143,7 +151,9 @@ class _AddDeviceState extends State<AddDevice> {
   }
   @override
   Widget build(BuildContext context) {
-    var jjjj = Scaffold(
+    var finalWidget, noDeviceWidget, devicesFoundWidget;
+
+    noDeviceWidget = Scaffold(
       appBar: ApplicationBar(title:'Devices'),
       body: Center(
         child: Column(
@@ -162,9 +172,9 @@ class _AddDeviceState extends State<AddDevice> {
 
       ),
     );
-    var finalWidget;
 
-    var xxxx = Scaffold(
+
+    devicesFoundWidget = Scaffold(
       appBar: ApplicationBar(title: 'Devices'),
       body:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,9 +230,9 @@ class _AddDeviceState extends State<AddDevice> {
     );
 
     if(_noDevicesFound == true){
-      finalWidget = jjjj;
+      finalWidget = noDeviceWidget;
     }else if(_discoveringDevices ==true || _discoveryDone ==true){
-      finalWidget = xxxx;
+      finalWidget = devicesFoundWidget;
     }
     return finalWidget;
   }
