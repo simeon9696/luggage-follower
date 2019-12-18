@@ -22,33 +22,36 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
     'metres': false,
     'goingOutOfRangeAlert': false,
     'outOfRangeAlert': false,
+    'device' : 'N/A'
   };
 
   String _luggageStatus = 'Not connected';
   String _luggageDistance = 'N/A';
   String _distanceUnits = '';
-
+  String distance = 'N/A';
 
   //Bluetooth setup
   FlutterBluetoothSerial bluetooth = FlutterBluetoothSerial.instance;
-  void getDeviceInformation() async{
+
+  void getDeviceInformation(bool feet) async{
     bool deviceBluetoothAvail = await bluetooth.isEnabled;
     bool deviceBluetoothEn = await bluetooth.isAvailable;
 
     int rssiValue =0;
-    if(deviceBluetoothEn && deviceBluetoothAvail){
-      String distance = 'N/A';
-      changeLuggageStatus('Device not in range');
-      changeLuggageDistance(distance);
-      changeDistanceUnits(distance);
-      rssiValue = getRssi();
 
+    if(deviceBluetoothEn && deviceBluetoothAvail){
+
+      changeLuggageStatus('Device not in range');
+
+      rssiValue = getRssi();
+      changeLuggageDistance(rssiValue.toString());
+      changeDistanceUnits(rssiValue.toString(), feet);
     }
     else{
       //_neverSatisfied();
       changeLuggageStatus(_luggageStatus = 'Bluetooth disabled');
-      changeLuggageDistance('N/A');
-      changeDistanceUnits('N/A');
+      changeLuggageDistance(distance);
+      changeDistanceUnits(distance, feet);
     }
   }
   void changeLuggageStatus(String status){
@@ -65,11 +68,11 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
     return;
   }
 
-  void changeDistanceUnits(String distance){
+  void changeDistanceUnits(String distance,  bool Feet){
     if (distance =='N/A'){
       _distanceUnits = '';
     }else{
-      _distanceUnits =(dataFromScreen['feet'] ? "ft" : "m");
+      _distanceUnits =(Feet? "ft" : "m");
     }
     return;
   }
@@ -112,7 +115,7 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
 
   @override
   Widget build(BuildContext context) {
-    getDeviceInformation();
+
 
     dataFromScreen = ModalRoute.of(context).settings.arguments;
     if(dataFromScreen == null){
@@ -121,9 +124,12 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
         'metres': false,
         'goingOutOfRangeAlert': false,
         'outOfRangeAlert': false,
+        'device' : 'N/A',
       };
     }
 
+    getDeviceInformation(dataFromScreen['feet']);
+    print(dataFromScreen['device']);
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: ApplicationBar(title: 'Luggage Follower'),
@@ -147,14 +153,13 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
             child: SfRadialGauge(
               axes: <RadialAxis>[
                 RadialAxis(minimum: 0, maximum: 150,
-                  pointers: <GaugePointer>[MarkerPointer(
-                    markerType: MarkerType.invertedTriangle,
-                    markerOffset: -5,
-                    enableAnimation: true,
-                    animationDuration: 0.5,
-                    value: 90,
-                    color: Colors.pink,
-                    )
+                  pointers: <GaugePointer>[
+                    RangePointer(
+                      value: 90,
+                      width: 0.06,
+                      sizeUnit: GaugeSizeUnit.factor,
+                      color: Colors.pink[700],
+                    ),
                   ],
                   annotations: <GaugeAnnotation>[
                     GaugeAnnotation(
@@ -177,7 +182,10 @@ class _LuggageFollowerMainState extends State<LuggageFollowerMain> {
                 onPressed:_showNotification,
                 child: Text('Launch notif')),
           ),
-
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
+            child:  Text('$_luggageDistance $_distanceUnits'),
+          ),
         ],
       ),
     );

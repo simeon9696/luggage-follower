@@ -128,6 +128,9 @@ class _AddDeviceState extends State<AddDevice> {
       print('Bonding with ${deviceToConnect.device.address} has ${bonded ? 'succesful' : 'failed'}.');
       if(bonded ==true){
         showFlutterToastMessage("Pairing and connection to ${deviceToConnect.device.name} successful");
+        await Navigator.pushReplacementNamed(context, '/home', arguments: {
+          'device' : deviceToConnect
+        });
       }
       else{
         showFlutterToastMessage("Pairing and connection to ${deviceToConnect.device.name} failed");
