@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audio_cache.dart';
-
+import 'package:provider/provider.dart';
+import 'package:luggagefollower/scheduler.dart';
 import 'applicationbar.dart';
 
 class SettingsData with ChangeNotifier {
@@ -21,8 +22,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  static bool _isFeetChecked   = false;
-  static bool _isMetersChecked = true;
+  static bool _isFeetChecked   = true;
+  static bool _isMetersChecked = false;
   static bool _isGoingOutOfRangeChecked = false;
   static bool _isOutOfRangeChecked   = false;
 
@@ -45,7 +46,7 @@ class _SettingsState extends State<Settings> {
 
 
   Future<bool> _willPopCallback() async {
-    print('$_isFeetChecked ,$_isMetersChecked, $_isGoingOutOfRangeChecked, $_isOutOfRangeChecked');
+    //print('$_isFeetChecked ,$_isMetersChecked, $_isGoingOutOfRangeChecked, $_isOutOfRangeChecked');
     //Navigator.pop(context, false);
     await Navigator.pushReplacementNamed(context, '/home', arguments: {
       'feet': _isFeetChecked,
@@ -69,7 +70,9 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-      return WillPopScope(
+    final schedule = Provider.of<Schedule>(context);
+
+    return WillPopScope(
         onWillPop: _willPopCallback,
         child: Scaffold(
           appBar: ApplicationBar(title: 'Settings'),
@@ -90,6 +93,7 @@ class _SettingsState extends State<Settings> {
                     title: Text('Distance in feet', style: Theme.of(context).textTheme.body1),
                     value: _isFeetChecked,
                     onChanged: (bool value) {
+                      schedule.textUnits ='ft';
                       setState(() {
                         _isFeetChecked = value; _isMetersChecked = !value;
                          data.feet = value;
@@ -106,6 +110,7 @@ class _SettingsState extends State<Settings> {
                     title: Text('Distance in metres', style: Theme.of(context).textTheme.body1),
                     value: _isMetersChecked,
                     onChanged: (bool value) {
+                      schedule.textUnits ='m';
                       setState(() {
                         _isMetersChecked = value;
                         _isFeetChecked = !value;

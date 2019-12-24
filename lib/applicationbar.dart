@@ -14,6 +14,7 @@ class ApplicationBar extends StatelessWidget implements PreferredSizeWidget{
       ),
       centerTitle: true,
       backgroundColor: Colors.grey[850],
+      elevation: 10,
     );
   }
   @override

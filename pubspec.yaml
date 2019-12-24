@@ -25,7 +25,12 @@ dependencies:
   flutter_launcher_icons: ^0.7.4
   splashscreen: ^1.2.0
   fluttertoast: ^3.1.3
-  syncfusion_flutter_gauges: ^17.3.26-beta
+  syncfusion_flutter_gauges: ^17.4.40-beta
+  flutter_svg: ^0.15.0
+  provider: ^3.2.0
+  google_maps_flutter: ^0.5.21+15
+  permission_handler: ^4.0.0
+  location: ^2.3.5
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -54,7 +59,8 @@ flutter:
   assets:
     - assets/images/
     - assets/sounds/
-
+    - assets/svgs/
+    - map_style.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

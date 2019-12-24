@@ -38,12 +38,20 @@ class NavigationDrawer extends StatelessWidget {
               }
           ),
           ListTile(
-            title: Text("Add Device"),
-            trailing: Icon(Icons.add),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/adddevice');
-            }
+              title: Text("Add Device"),
+              trailing: Icon(Icons.add),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/adddevice');
+              }
+          ),
+          ListTile(
+              title: Text("Locate Luggage"),
+              trailing: Icon(Icons.location_on),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/luggagelocation');
+              }
           ),
           ListTile(
             title: Text("Settings"),

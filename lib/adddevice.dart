@@ -6,6 +6,9 @@ import 'applicationbar.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:provider/provider.dart';
+import 'package:luggagefollower/scheduler.dart';
+
 class AddDevice extends StatefulWidget {
   @override
   _AddDeviceState createState() => _AddDeviceState();
@@ -19,6 +22,7 @@ class _AddDeviceState extends State<AddDevice> {
   bool _discoveryDone = false;
   bool _discoveringDevices =false;
   bool _noDevicesFound =true;
+  bool _isConnecting = false;
   StreamSubscription<BluetoothDiscoveryResult> _streamSubscription;
   List<BluetoothDiscoveryResult> _devices = List<BluetoothDiscoveryResult>();
 
@@ -89,7 +93,6 @@ class _AddDeviceState extends State<AddDevice> {
         _discoveringDevices=true;
       });
 
-
       _streamSubscription = FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
          setState(() { _devices.add(r); });
 
@@ -119,26 +122,37 @@ class _AddDeviceState extends State<AddDevice> {
       });
   }
 
-  void connectToDevice( BluetoothDiscoveryResult deviceToConnect) async {
+  Future<bool> connectToDevice( BluetoothDiscoveryResult deviceToConnect, Schedule schedule,FlutterBluetoothSerial instance) async {
+    bool bonded = false;
+    setState(() {
+      _isConnecting =true;
+    });
     if(_devices != null){
-      bool bonded = false;
+
       print('Bonding to ${deviceToConnect.device.address}...');
       bonded = await FlutterBluetoothSerial.instance.bondDeviceAtAddress(deviceToConnect.device.address);
-      print('This is bonded: $bonded');
-      print('Bonding with ${deviceToConnect.device.address} has ${bonded ? 'succesful' : 'failed'}.');
+      print('Bonding with ${deviceToConnect.device.address} was ${bonded ? 'succesful' : 'failed'}.');
       if(bonded ==true){
         showFlutterToastMessage("Pairing and connection to ${deviceToConnect.device.name} successful");
+        schedule.device = deviceToConnect;
+        schedule.connectionInstance = instance;
+        bluetooth.cancelDiscovery();
         await Navigator.pushReplacementNamed(context, '/home', arguments: {
-          'device' : deviceToConnect
+          'deviceToConnect' : deviceToConnect.device.address.toString(),
+          'bondSucessful' : bonded,
         });
       }
       else{
         showFlutterToastMessage("Pairing and connection to ${deviceToConnect.device.name} failed");
+        setState(() {
+          _isConnecting =false;
+        });
       }
     }else{
       showFlutterToastMessage("No device to connect to");
 
     }
+    return bonded;
   }
 
   void showFlutterToastMessage(String message){
@@ -154,6 +168,7 @@ class _AddDeviceState extends State<AddDevice> {
   }
   @override
   Widget build(BuildContext context) {
+    final schedule = Provider.of<Schedule>(context);
     var finalWidget, noDeviceWidget, devicesFoundWidget;
 
     noDeviceWidget = Scaffold(
@@ -177,7 +192,10 @@ class _AddDeviceState extends State<AddDevice> {
     );
 
 
-    devicesFoundWidget = Scaffold(
+    devicesFoundWidget =
+
+
+    Scaffold(
       appBar: ApplicationBar(title: 'Devices'),
       body:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,9 +217,10 @@ class _AddDeviceState extends State<AddDevice> {
                           child: ListTile(
                             title: Text(_devices[index].device.name),
                             trailing: Icon(Icons.add),
-                            onTap: () {
+                            onTap: () async{
                               print('Tapping ${_devices[index].device.name}');
-                              connectToDevice(_devices[index]);
+                              //deviceSelectedWidget = CircularProgressIndicator();
+                              connectToDevice(_devices[index],schedule, bluetooth);
                             }, //devices[index].device.toString()
                           ),
                         ),
@@ -222,8 +241,8 @@ class _AddDeviceState extends State<AddDevice> {
             showFlutterToastMessage("Scanning in progress. Wait till completion to re-scan");
           }
         },
-        child: (_discoveringDevices? CircularProgressIndicator(
-            backgroundColor: Colors.pink,
+        child: (_discoveringDevices || _isConnecting? CircularProgressIndicator(
+            backgroundColor: Colors.pinkAccent,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             value:null,
             strokeWidth: 1.0)
