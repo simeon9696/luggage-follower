@@ -10,11 +10,11 @@ class ApplicationBar extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
       title: Text(
         title,
-        style: Theme.of(context).textTheme.title,
+        style: Theme.of(context).textTheme.headline5,
       ),
       centerTitle: true,
-      backgroundColor: Colors.grey[850],
-      elevation: 10,
+      backgroundColor: Colors.grey[900],
+      elevation: 0,
     );
   }
   @override

@@ -1,24 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:location/location.dart';
 
 class Schedule with ChangeNotifier{
-  double _distance  =40;
+  double _distance  =15;
   double get distance => _distance;
 
   String _textDistance = '';
   String get textDistance => _textDistance;
 
-  String _textUnits= 'N/A';
+  String _textUnits= 'metres';
   String get textUnits => _textUnits;
 
   String _luggageStat= 'Tracking N/A';
   String get luggageStat => _luggageStat;
+
+  String _bluetoothStat= 'Disabled';
+  String get bluetoothStat => _bluetoothStat;
+
+  Stream _bluetoothData;
+  Stream get bluetoothData => _bluetoothData;
 
   FlutterBluetoothSerial _connectionInstance;
   FlutterBluetoothSerial get connectionInstance => _connectionInstance;
 
   BluetoothDiscoveryResult _device;
   BluetoothDiscoveryResult get device => _device;
+
+  BluetoothConnection _bluetoothInstance;
+  BluetoothConnection get bluetoothInstance => _bluetoothInstance;
+
+  String _phoneLocation;
+  String get phoneLocation => _phoneLocation;
 
   set distance (double newDistance){
     _distance = newDistance;
@@ -40,6 +55,16 @@ class Schedule with ChangeNotifier{
     notifyListeners();
   }
 
+  set bluetoothStat (String newBluetoothStat){
+    _bluetoothStat = newBluetoothStat;
+    notifyListeners();
+  }
+
+  set bluetoothData (Stream newStream){
+    _bluetoothData = newStream;
+    notifyListeners();
+  }
+
   set device (BluetoothDiscoveryResult newDeviceAddress){
     _device = newDeviceAddress;
     notifyListeners();
@@ -47,6 +72,16 @@ class Schedule with ChangeNotifier{
 
   set connectionInstance (FlutterBluetoothSerial newInstance){
     _connectionInstance = newInstance;
+    notifyListeners();
+  }
+
+  set bluetoothInstance (BluetoothConnection newConnection){
+    _bluetoothInstance = newConnection;
+    notifyListeners();
+  }
+
+  set phoneLocation (String newLocation){
+    _phoneLocation = newLocation;
     notifyListeners();
   }
 }

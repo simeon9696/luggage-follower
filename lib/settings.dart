@@ -22,8 +22,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  static bool _isFeetChecked   = true;
-  static bool _isMetersChecked = false;
+  static bool _isFeetChecked   = false;
+  static bool _isMetersChecked = true;
   static bool _isGoingOutOfRangeChecked = false;
   static bool _isOutOfRangeChecked   = false;
 
@@ -48,12 +48,7 @@ class _SettingsState extends State<Settings> {
   Future<bool> _willPopCallback() async {
     //print('$_isFeetChecked ,$_isMetersChecked, $_isGoingOutOfRangeChecked, $_isOutOfRangeChecked');
     //Navigator.pop(context, false);
-    await Navigator.pushReplacementNamed(context, '/home', arguments: {
-      'feet': _isFeetChecked,
-      'metres': _isMetersChecked,
-      'goingOutOfRangeAlert': _isGoingOutOfRangeChecked,
-      'outOfRangeAlert': _isOutOfRangeChecked,
-    });
+     Navigator.pop(context);
 
      return true; // return true if the route to be popped
   }
@@ -75,6 +70,7 @@ class _SettingsState extends State<Settings> {
     return WillPopScope(
         onWillPop: _willPopCallback,
         child: Scaffold(
+          backgroundColor: Colors.grey[900],
           appBar: ApplicationBar(title: 'Settings'),
           body: Column(
               //crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,36 +86,36 @@ class _SettingsState extends State<Settings> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 0),
                   child: CheckboxListTile(
-                    title: Text('Distance in feet', style: Theme.of(context).textTheme.body1),
+                    title: Text('Distance in feet', style: Theme.of(context).textTheme.bodyText1),
                     value: _isFeetChecked,
                     onChanged: (bool value) {
-                      schedule.textUnits ='ft';
+                      schedule.textUnits ='feet';
                       setState(() {
-                        _isFeetChecked = value; _isMetersChecked = !value;
+                        _isFeetChecked = value;
                          data.feet = value;
                       });
                     },
                     checkColor: Colors.white,
                     activeColor: Colors.pink,
-                    subtitle: Text('1 foot ~ 0.3 metres',style: Theme.of(context).textTheme.display2),
+                    subtitle: Text('1 foot ~ 0.3 metres',style: Theme.of(context).textTheme.bodyText2),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 0),
                   child: CheckboxListTile(
-                    title: Text('Distance in metres', style: Theme.of(context).textTheme.body1),
-                    value: _isMetersChecked,
+                    title: Text('Distance in metres', style: Theme.of(context).textTheme.bodyText1),
+                    value: !_isFeetChecked,
                     onChanged: (bool value) {
-                      schedule.textUnits ='m';
+                      schedule.textUnits ='metres';
                       setState(() {
-                        _isMetersChecked = value;
+
                         _isFeetChecked = !value;
-                        data.metres =value;
+                        data.metres =! _isFeetChecked;
                       });
                     },
                     checkColor: Colors.white,
                     activeColor: Colors.pink,
-                    subtitle: Text('1 metre ~ 3 feet',style: Theme.of(context).textTheme.display2),
+                    subtitle: Text('1 metre ~ 3 feet',style: Theme.of(context).textTheme.bodyText2),
                   ),
                 ),
                 Padding(
@@ -138,7 +134,7 @@ class _SettingsState extends State<Settings> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 0),
                     child: CheckboxListTile(
-                      title: Text('Going out of Range', style: Theme.of(context).textTheme.body1),
+                      title: Text('Going out of Range', style: Theme.of(context).textTheme.bodyText1),
                       value: _isGoingOutOfRangeChecked,
                       onChanged: (bool value) {
                         setState(() {
@@ -148,7 +144,7 @@ class _SettingsState extends State<Settings> {
                       },
                       checkColor: Colors.white,
                       activeColor: Colors.pink,
-                      subtitle: Text("Audible 'Going Out of range' - Tap and hold to preview", style: Theme.of(context).textTheme.display2),
+                      subtitle: Text("Audible 'Going Out of range' - Tap and hold to preview", style: Theme.of(context).textTheme.bodyText2),
                     ),
                   ),
                 ),
@@ -161,7 +157,7 @@ class _SettingsState extends State<Settings> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 0),
                     child: CheckboxListTile(
-                      title: Text('Out of Range', style: Theme.of(context).textTheme.body1),
+                      title: Text('Out of Range', style: Theme.of(context).textTheme.bodyText1),
                       value: _isOutOfRangeChecked,
                       onChanged: (bool value) {
                         setState(() {
@@ -171,14 +167,14 @@ class _SettingsState extends State<Settings> {
                       },
                       checkColor: Colors.white,
                       activeColor: Colors.pink,
-                      subtitle: Text("Audible 'Out of range' - Tap and hold to preview", style: Theme.of(context).textTheme.display2),
+                      subtitle: Text("Audible 'Out of range' - Tap and hold to preview", style: Theme.of(context).textTheme.bodyText2),
                     ),
                   ),
                 ),
               ],
           ),
 
-    ),
-      );
+        ),
+    );
   }
 }

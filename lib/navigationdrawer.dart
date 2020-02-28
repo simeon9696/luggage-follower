@@ -7,6 +7,7 @@ class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -22,7 +23,8 @@ class NavigationDrawer extends StatelessWidget {
                     bottom: 12.0,
                     left: 16.0,
                     child: Text("Luggage Follower",
-                        style: Theme.of(context).textTheme.display1)
+                        style: TextStyle(fontFamily: "Avenir", fontSize: 25.0),
+                    )
                 ),
               ])
           ),

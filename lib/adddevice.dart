@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'dart:async' show Future, StreamSubscription;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'applicationbar.dart';
@@ -94,17 +93,15 @@ class _AddDeviceState extends State<AddDevice> {
       });
 
       _streamSubscription = FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
-         setState(() { _devices.add(r); });
 
+
+         setState(() { _devices.add(r); });
+         print(r.device.name);
       });
 
       showFlutterToastMessage('Beginning scan...');
       _streamSubscription.onDone(() {
         showFlutterToastMessage('Scan complete! Press plus button to rescan if needed');
-
-        setState(() {
-
-        });
         setState(() {
           _discoveryDone = true;
           _discoveringDevices=false;
@@ -116,7 +113,6 @@ class _AddDeviceState extends State<AddDevice> {
           }
           for(var device in _devices){
             print(device.device.name);
-
           }
         });
       });
@@ -131,16 +127,17 @@ class _AddDeviceState extends State<AddDevice> {
 
       print('Bonding to ${deviceToConnect.device.address}...');
       bonded = await FlutterBluetoothSerial.instance.bondDeviceAtAddress(deviceToConnect.device.address);
+      BluetoothConnection luggageFollowerDevice = await BluetoothConnection.toAddress(deviceToConnect.device.address);
       print('Bonding with ${deviceToConnect.device.address} was ${bonded ? 'succesful' : 'failed'}.');
       if(bonded ==true){
         showFlutterToastMessage("Pairing and connection to ${deviceToConnect.device.name} successful");
         schedule.device = deviceToConnect;
         schedule.connectionInstance = instance;
-        bluetooth.cancelDiscovery();
-        await Navigator.pushReplacementNamed(context, '/home', arguments: {
-          'deviceToConnect' : deviceToConnect.device.address.toString(),
-          'bondSucessful' : bonded,
-        });
+        schedule.luggageStat = "Connected";
+        schedule.bluetoothStat ="Enabled";
+        schedule.bluetoothInstance = luggageFollowerDevice;
+        await bluetooth.cancelDiscovery();
+        Navigator.pop(context);
       }
       else{
         showFlutterToastMessage("Pairing and connection to ${deviceToConnect.device.name} failed");
@@ -172,6 +169,7 @@ class _AddDeviceState extends State<AddDevice> {
     var finalWidget, noDeviceWidget, devicesFoundWidget;
 
     noDeviceWidget = Scaffold(
+      backgroundColor: Colors.grey[900],
       appBar: ApplicationBar(title:'Devices'),
       body: Center(
         child: Column(
@@ -182,6 +180,9 @@ class _AddDeviceState extends State<AddDevice> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.pink,
+        splashColor: Colors.white,
         onPressed: () {
           startDeviceDiscovery();
 
@@ -191,11 +192,8 @@ class _AddDeviceState extends State<AddDevice> {
       ),
     );
 
-
-    devicesFoundWidget =
-
-
-    Scaffold(
+    devicesFoundWidget = Scaffold(
+      backgroundColor: Colors.grey[900],
       appBar: ApplicationBar(title: 'Devices'),
       body:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +213,7 @@ class _AddDeviceState extends State<AddDevice> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 0),
                           child: ListTile(
-                            title: Text(_devices[index].device.name),
+                            title: Text((_devices[index].device.name == null? _devices[index].device.address: _devices[index].device.name)),
                             trailing: Icon(Icons.add),
                             onTap: () async{
                               print('Tapping ${_devices[index].device.name}');
@@ -234,6 +232,9 @@ class _AddDeviceState extends State<AddDevice> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.pink,
+        splashColor: Colors.pinkAccent,
         onPressed: () {
           if (!_discoveringDevices) {
             startDeviceDiscovery();
@@ -242,6 +243,7 @@ class _AddDeviceState extends State<AddDevice> {
           }
         },
         child: (_discoveringDevices || _isConnecting? CircularProgressIndicator(
+
             backgroundColor: Colors.pinkAccent,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             value:null,
